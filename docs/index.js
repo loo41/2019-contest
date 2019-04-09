@@ -62,27 +62,54 @@ window.onload = function() {
 
   // 绑定事件
   function evt() {
-    document.addEventListener('keydown', function(e) {
-      // 解决浏览器返回bug
-      e.preventDefault()
-      let dir
-      switch(e.keyCode) {
-        case 37:
-          dir = "left"
-        break;
-        case 39:
-          dir = "right"
-        break;
-        case 38:
-          dir = "top"
-        break;
-        case 40:
-          dir = "bottom"
-        break
-      }
-      _move(dir)
-    })
+    console.log('pp')
+    if (type) {
+      // m
+      let startX, startY
+      document.addEventListener('touchstart', function(e){
+        startX = e.changedTouches[0].pageX
+        startY = e.changedTouches[0].pageY
+      })
+      document.addEventListener('touchend', function(e){
+        endX = e.changedTouches[0].pageX
+        endY = e.changedTouches[0].pageY
+        distanceX = endX - startX
+        distanceY = endY - startY
+        if(Math.abs(distanceX) > Math.abs(distanceY) && distanceX > 0) {
+          _move('right')
+        }else if(Math.abs(distanceX) > Math.abs(distanceY) && distanceX < 0) {
+          _move('left')
+        }else if(Math.abs(distanceX) < Math.abs(distanceY) && distanceY < 0) {
+          _move('top')
+        }else if(Math.abs(distanceX) < Math.abs(distanceY) && distanceY > 0) {
+          _move('bottom')
+        }
+      })
+    } else {
+      // pc
+      document.addEventListener('keydown', function(e) {
+        // 解决浏览器返回bug
+        e.preventDefault()
+        let dir
+        switch(e.keyCode) {
+          case 37:
+            dir = "left"
+          break;
+          case 39:
+            dir = "right"
+          break;
+          case 38:
+            dir = "top"
+          break;
+          case 40:
+            dir = "bottom"
+          break
+        }
+        _move(dir)
+      })
+    }
     reset.onclick = () => {init(passData, tax)}
+    reset.click()
     taxOption.onchange = () => {
       init(passData, taxOption.selectedIndex)
     }
@@ -136,7 +163,7 @@ window.onload = function() {
       sokobanData.people.x -= 1
     }
     if (isPass()) {
-      nextTax()
+      setTimeout(() => nextTax(), 0)
     }
   }
 
